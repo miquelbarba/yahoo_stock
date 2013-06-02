@@ -1,8 +1,8 @@
 module YahooStock
 
-  # income = YahooStock::IncomeStatement.new(stock_symbol: 'yhoo')
-  # income.results(:to_hash)
-  class IncomeStatement < Base
+  # balance = YahooStock::BalanceSheet.new(stock_symbol: 'yhoo')
+  # balance.results(:to_hash)
+  class BalanceSheet < Base
     class QuoteException < RuntimeError; end
 
     def initialize(options)
