@@ -29,23 +29,25 @@ module YahooStock
                   map {|ary| [underscore(ary.first).to_sym] + ary[1..-1]}
 
       data = Hash.new
-      dates = table.first[1..-1].map {|s| Date.parse(s)}
-      table[1..-1].each do |ary|
-        #items = Hash.new
-        #dates.each_with_index {|date, i| items[date] = ary[i + 1]}
-        numbers = ary[1..-1].map do |s|
-          if s == '-'
-            nil
-          else
-            s.gsub!(',', '')
-            num = s[0] == '(' ? "-#{s[1..-2]}" : s
-            num.to_i * 1000
+      if table.any?
+        dates = table.first[1..-1].map {|s| Date.parse(s)}
+        table[1..-1].each do |ary|
+          #items = Hash.new
+          #dates.each_with_index {|date, i| items[date] = ary[i + 1]}
+          numbers = ary[1..-1].map do |s|
+            if s == '-'
+              nil
+            else
+              s.gsub!(',', '')
+              num = s[0] == '(' ? "-#{s[1..-2]}" : s
+              num.to_i * 1000
+            end
           end
-        end
 
-        items = dates.zip(numbers)
-        #items = dates.each_with_index.map {|date, i| [date, ary[i + 1]]}
-        data[ary.first] = items
+          items = dates.zip(numbers)
+          #items = dates.each_with_index.map {|date, i| [date, ary[i + 1]]}
+          data[ary.first] = items
+        end
       end
 
       data
