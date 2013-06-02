@@ -16,7 +16,8 @@ module YahooStock
     BASE_URLS = {
       :quote        => "http://download.finance.yahoo.com/d/quotes.csv",
       :history      => "http://ichart.finance.yahoo.com/table.csv",
-      :scrip_symbol => "http://finance.yahoo.com/lookup/all"
+      :scrip_symbol => "http://finance.yahoo.com/lookup/all",
+      :income_statement => 'http://finance.yahoo.com/q/is'
     } unless defined?(BASE_URLS)
     
     attr_accessor :base_url, :uri_parameters
