@@ -83,11 +83,15 @@ module YahooStock
     # Generate full uri with the help of uri method of the superclass
     def uri
       history_type = case type
-                       when :daily     then 'd'
-                       when :weekly    then 'w'
-                       when :monthly   then 'm'
-                       when :dividend  then 'v'
-                     end
+                             when :daily
+                               'd'
+                             when :weekly
+                               'w'
+                             when :monthly
+                               'm'
+                             when :dividend
+                               'v'
+                           end
       @uri_parameters = {:a => sprintf("%02d", start_date.month-1), :b => start_date.day, 
                          :c => start_date.year, :d => sprintf("%02d", end_date.month-1),
                          :e => end_date.day, :f => end_date.year, :s => stock_symbol,
