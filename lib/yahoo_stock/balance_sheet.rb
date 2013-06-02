@@ -12,7 +12,7 @@ module YahooStock
       if options[:stock_symbol].nil? || options[:stock_symbol].empty?
         raise QuoteException, "You must provide at least one stock symbol to fetch data"
       end
-      @interface = YahooStock::Interface::IncomeStatement.new(options)
+      @interface = YahooStock::Interface::BalanceSheet.new(options)
     end
 
     def results(type=nil, &block)
