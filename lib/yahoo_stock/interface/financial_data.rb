@@ -1,4 +1,7 @@
 require 'nokogiri'
+require 'net/http'
+require 'uri'
+
 
 module YahooStock
   class Interface::FinancialData < Interface
@@ -20,8 +23,23 @@ module YahooStock
       super()
     end
 
+    def fetch(uri_str, limit = 10)
+      # You should choose better exception.
+      raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+      url = URI.parse(uri_str)
+      req = Net::HTTP::Get.new("#{url.path}?#{url.query}")
+      response = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
+      case response
+        when Net::HTTPSuccess     then response.body
+        when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+        else
+          response.error!
+      end
+    end
+
     def results
-      doc = Nokogiri::HTML(get)
+      doc = Nokogiri::HTML(fetch(uri))
       table = doc.xpath('//*[@id="yfncsumtab"]/tr[2]/td/table[2]/tr/td/table/tr').
                   map {|tr| tr.children.map {|td| td.content.gsub(/\s+/, "").gsub(/[[:space:]]/, '')}}.compact.
                   each {|ary| ary.delete('')}.

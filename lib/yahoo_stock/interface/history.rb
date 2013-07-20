@@ -96,7 +96,7 @@ module YahooStock
                          :c => start_date.year, :d => sprintf("%02d", end_date.month-1),
                          :e => end_date.day, :f => end_date.year, :s => stock_symbol,
                          :g => history_type, :ignore => '.csv'}
-      super()  
+      super()
     end
 
     # Get uri content with the help of get method of the super class
