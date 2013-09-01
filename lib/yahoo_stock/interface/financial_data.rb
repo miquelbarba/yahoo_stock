@@ -8,12 +8,14 @@ module YahooStock
     def initialize(stock_params_hash)
       @stock_symbol         = stock_params_hash[:stock_symbol]
       @base_url             = BASE_URLS[:income_statement]
+      @annual               = stock_params_hash[:type] == 'annual'
       add_observer(self)
     end
 
     # Generate full url to be sent to yahoo
     def uri
-      @uri_parameters = {:s => @stock_symbol, :annual => true}
+      @uri_parameters = {:s => @stock_symbol}
+      @uri_parameters[:annual] = @annual if @annual
       super
     end
 
@@ -50,8 +52,6 @@ module YahooStock
       if table.any?
         dates = table.first[1..-1].map {|s| Date.parse(s)}
         table[1..-1].each do |ary|
-          #items = Hash.new
-          #dates.each_with_index {|date, i| items[date] = ary[i + 1]}
           numbers = ary[1..-1].map do |s|
             if s == '-'
               nil
@@ -62,10 +62,11 @@ module YahooStock
             end
           end
 
-          items = dates.zip(numbers)
-          #items = dates.each_with_index.map {|date, i| [date, ary[i + 1]]}
-          data[ary.first] = items
+          data[ary.first] = dates.zip(numbers)
         end
+
+        type = @annual ? 'annual' : 'quarterly'
+        data[:type] = dates.map { |date| [date, type] }
       end
 
       data
